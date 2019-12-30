@@ -58,12 +58,12 @@ module Shards
           next if pkg.versions.has_key?(version)
 
           if spec = resolver.spec?(version)
-            unless dependency.name == spec.name
-              raise Error.new("Error shard name (#{spec.name}) doesn't match dependency name (#{dependency.name})")
-            end
+            if dependency.name != spec.name
+              STDERR.puts("WARNING: shard name (#{spec.name}) doesn't match dependency name (#{dependency.name}) in version #{version}.\n   Skipping this version.")
 
-            pkg.versions[version] = spec
-            add(spec)
+              pkg.versions[version] = spec
+              add(spec)
+            end
           else
             # skip (e.g. missing shard.yml)
           end
